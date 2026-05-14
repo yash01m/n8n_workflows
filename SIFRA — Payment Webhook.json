@@ -1,0 +1,463 @@
+{
+  "name": "SIFRA — Payment Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "razorpay-payment",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        96
+      ],
+      "id": "6f4e2903-5cbe-45b0-8c54-406664626fae",
+      "name": "Webhook",
+      "webhookId": "8422d5cf-65df-45cb-9a90-8073d29d5ed2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FnRIu6zpl9gAWn7iskGZVAUNDxqn58MXVGaPixg23KI",
+          "mode": "list",
+          "cachedResultName": "patient_intake (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FnRIu6zpl9gAWn7iskGZVAUNDxqn58MXVGaPixg23KI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 677811972,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FnRIu6zpl9gAWn7iskGZVAUNDxqn58MXVGaPixg23KI/edit#gid=677811972"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "payment_link_id",
+              "lookupValue": "={{ $json.body.payload.payment_link.entity.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "id": "486b90b2-e8ec-464c-800a-a09ad4b94523",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "E21XC6ZowkWDsELX",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1FnRIu6zpl9gAWn7iskGZVAUNDxqn58MXVGaPixg23KI",
+          "mode": "list",
+          "cachedResultName": "patient_intake (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FnRIu6zpl9gAWn7iskGZVAUNDxqn58MXVGaPixg23KI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 677811972,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FnRIu6zpl9gAWn7iskGZVAUNDxqn58MXVGaPixg23KI/edit#gid=677811972"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "transaction_id": "={{ $('Webhook').first().json.body.payload.payment.entity.id }}",
+            "payment_status": "paid",
+            "amount_paid": "={{ $('Webhook').first().json.body.payload.payment.entity.amount / 100 }}",
+            "payment_date": "={{ new Date($('Webhook').first().json.body.payload.payment.entity.created_at * 1000).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'}) }}",
+            "payment_link_id": "={{ $('Webhook').first().json.body.payload.payment_link.entity.id }}",
+            "Stage": "booked"
+          },
+          "matchingColumns": [
+            "payment_link_id"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telegram Username",
+              "displayName": "Telegram Username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Symptom",
+              "displayName": "Symptom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Duration",
+              "displayName": "Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Severity (1-10)",
+              "displayName": "Severity (1-10)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Chat History",
+              "displayName": "Chat History",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Stage",
+              "displayName": "Stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "available_slots",
+              "displayName": "available_slots",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "payment_link_id",
+              "displayName": "payment_link_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "payment_link_url",
+              "displayName": "payment_link_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "transaction_id",
+              "displayName": "transaction_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "payment_status",
+              "displayName": "payment_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount_paid",
+              "displayName": "amount_paid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "payment_date",
+              "displayName": "payment_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        0
+      ],
+      "id": "de45da11-ea0b-45dd-baad-b1faf4739a84",
+      "name": "Update Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "E21XC6ZowkWDsELX",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Webhook').first().json.body.payload.payment_link.entity.notes.chat_id }}",
+        "text": "={{ \"We're sorry, \" + $('Webhook').first().json.body.payload.payment_link.entity.notes.patient_name + \". 😔\\n\\nIt seems your payment was unsuccessful.\\n\\nPlease try again using the same link or reply here and I'll send you a fresh payment link.\\n\\n💙 We're here to help!\" }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        192
+      ],
+      "id": "bdf0c3a3-c5ed-4d7c-8105-3b44b1d06b34",
+      "name": "Payment Failed Message",
+      "webhookId": "47f7af7f-0d2b-411f-9de5-f4774d596654",
+      "credentials": {
+        "telegramApi": {
+          "id": "ogVdCwMxKM0JxhSF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1a16c5b4-15d6-4de7-ab99-8b95d322346d",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "payment_link.paid",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        96
+      ],
+      "id": "d9a43d06-b065-4b92-9c76-fe8900fbf18a",
+      "name": " Payment Success Check"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cal.com/v2/bookings",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer cal_live_7a8abba741a861cdfabef4582bff22c7"
+            },
+            {
+              "name": "cal-api-version",
+              "value": "2024-08-13"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"eventTypeId\": 5407449,\n  \"start\": \"{{ $('Webhook').first().json.body.payload.payment_link.entity.notes.slot }}\",\n  \"attendee\": {\n    \"name\": \"{{ $('Google Sheets').first().json['Full Name'] }}\",\n    \"email\": \"{{ $('Google Sheets').first().json['Email Address'] }}\",\n    \"timeZone\": \"Asia/Kolkata\",\n    \"language\": \"en\"\n  },\n  \"metadata\": {\n    \"razorpay_payment_id\": \"{{ $('Webhook').first().json.body.payload.payment.entity.id }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        896,
+        0
+      ],
+      "id": "3dfec81a-42ce-4d97-913f-b5b45c36cdf2",
+      "name": "Create Booking"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Webhook').first().json.body.payload.payment_link.entity.notes.chat_id }}",
+        "text": "={{ \"🎉 Payment confirmed, \" + $('Webhook').first().json.body.payload.payment_link.entity.notes.patient_name + \"!\\n\\nYour consultation has been booked for \" + $('Webhook').first().json.body.payload.payment_link.entity.notes.formatted_time + \".\\n\\n📋 Before your appointment, please note down:\\n• When your symptoms get worse\\n• Any triggers you've noticed\\n• Current medications you're taking\\n\\nThis will help your doctor understand your case faster.\\n\\n💙 Take care and see you soon!\" }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "d75853f6-dc1c-4aea-95af-31958ac38d55",
+      "name": "Send Booking Confirmation",
+      "webhookId": "b6a86a63-bb8a-41a2-b58a-f89f637b3708",
+      "credentials": {
+        "telegramApi": {
+          "id": "ogVdCwMxKM0JxhSF",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": " Payment Success Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet": {
+      "main": [
+        [
+          {
+            "node": "Create Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    " Payment Success Check": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Payment Failed Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Booking": {
+      "main": [
+        [
+          {
+            "node": "Send Booking Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5cbc9b29-2065-45b2-aa5d-e02b764b1561",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c624ce2b227a8943aae28b2e7cfc1175f3b0d434d07f74072d0180da113f4049"
+  },
+  "id": "mFfM81yHp3xHzJoQ",
+  "tags": []
+}
